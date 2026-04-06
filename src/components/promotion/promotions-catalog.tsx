@@ -257,8 +257,8 @@ export function PromotionsCatalog() {
         </div>
       ) : (
         <>
-          {/* Grid em mobile, ou grid/lista em desktop conforme viewMode */}
-          <div className="sm:hidden">
+          {/* Grid mode: única renderização para mobile e desktop */}
+          {viewMode === 'grid' ? (
             <div
               data-testid={testIds.promotionsPage.list}
               className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
@@ -267,22 +267,24 @@ export function PromotionsCatalog() {
                 <PromotionCard key={promotion.id} promotion={promotion} priority={index < 4} />
               ))}
             </div>
-          </div>
-
-          <div className="hidden sm:block">
-            {viewMode === 'grid' ? (
-              <div
-                data-testid={testIds.promotionsPage.list}
-                className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
-              >
-                {visiblePromotions.map((promotion, index) => (
-                  <PromotionCard key={promotion.id} promotion={promotion} priority={index < 4} />
-                ))}
+          ) : (
+            <>
+              {/* Lista em desktop, grid em mobile */}
+              <div className="sm:hidden">
+                <div
+                  data-testid={testIds.promotionsPage.list}
+                  className="grid grid-cols-1 gap-4"
+                >
+                  {visiblePromotions.map((promotion, index) => (
+                    <PromotionCard key={promotion.id} promotion={promotion} priority={index < 4} />
+                  ))}
+                </div>
               </div>
-            ) : (
-              <PromotionsList promotions={visiblePromotions} />
-            )}
-          </div>
+              <div className="hidden sm:block">
+                <PromotionsList promotions={visiblePromotions} />
+              </div>
+            </>
+          )}
 
           {canLoadMore ? (
             <div className="flex justify-center">

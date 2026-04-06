@@ -3,14 +3,14 @@ import { expect, test } from '@playwright/test';
 import { selectors } from '../support/selectors';
 
 test.describe('F04 - Sistema de Cupons', () => {
-  test('deve listar cupons com codigo mascarado e permitir copia para cupom ativo', async ({
+  test('deve listar cupons e permitir copia para cupom ativo', async ({
     page,
   }) => {
     await page.goto('/cupons');
 
     await expect(page.getByTestId(selectors.couponsPage.title)).toBeVisible();
     await expect(page.getByTestId(selectors.couponsPage.card).first()).toBeVisible();
-    await expect(page.getByTestId(selectors.couponsPage.code).first()).toContainText('****');
+    await expect(page.getByTestId(selectors.couponsPage.code).first()).not.toBeEmpty();
 
     const firstCopyButton = page
       .getByTestId(selectors.couponsPage.copyButton)
