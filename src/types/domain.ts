@@ -1,5 +1,15 @@
 export type Platform = 'mercadolivre' | 'shopee' | 'amazon' | 'generic';
 
+export type Sport =
+  | 'corrida'
+  | 'musculacao'
+  | 'crossfit'
+  | 'yoga'
+  | 'ciclismo'
+  | 'futebol'
+  | 'tenis'
+  | 'natacao';
+
 export interface Category {
   id: string;
   slug: string;
@@ -10,7 +20,6 @@ export interface Category {
 export interface Coupon {
   id: string;
   code: string;
-  maskedCode: string;
   type: 'percent' | 'fixed';
   value: number;
   store: string;
@@ -29,6 +38,7 @@ export interface Promotion {
   platform: Platform;
   platformLogoUrl: string;
   categoryId: string;
+  sport: Sport;
   originalPrice: number;
   promoPrice: number;
   discountPercent: number;

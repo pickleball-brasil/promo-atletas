@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Manrope, Space_Grotesk } from 'next/font/google';
 
-import { MainNavigation } from '@/components/layout';
+import { CommunityBanner, MainFooter, MainNavigation } from '@/components/layout';
 
 import './globals.css';
 
@@ -30,6 +30,28 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'pt_BR',
   },
+  icons: {
+    icon: [
+      { url: '/brand/favicon.ico' },
+      { url: '/brand/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/brand/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+    ],
+    apple: [{ url: '/brand/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
+    other: [
+      {
+        rel: 'icon',
+        url: '/brand/android-chrome-192x192.png',
+        sizes: '192x192',
+        type: 'image/png',
+      },
+      {
+        rel: 'icon',
+        url: '/brand/android-chrome-512x512.png',
+        sizes: '512x512',
+        type: 'image/png',
+      },
+    ],
+  },
   alternates: {
     canonical: '/',
   },
@@ -46,8 +68,10 @@ export default function RootLayout({
       className={`${manrope.variable} ${spaceGrotesk.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col text-neutral-700 font-sans">
+        <CommunityBanner />
         <MainNavigation />
         {children}
+        <MainFooter />
       </body>
     </html>
   );

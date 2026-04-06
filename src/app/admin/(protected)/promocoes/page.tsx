@@ -32,6 +32,7 @@ export default function AdminPromocoesPage() {
               <tr className="border-b border-neutral-100 bg-neutral-50 text-left text-xs font-semibold uppercase text-neutral-400">
                 <th className="px-4 py-3">Título</th>
                 <th className="px-4 py-3">Categoria</th>
+                <th className="px-4 py-3">Esporte</th>
                 <th className="px-4 py-3">Plataforma</th>
                 <th className="px-4 py-3">Preço promo</th>
                 <th className="px-4 py-3">Desconto</th>
@@ -51,6 +52,9 @@ export default function AdminPromocoesPage() {
                   </td>
                   <td className="px-4 py-3 text-neutral-500">
                     {categoryMap[p.categoryId] ?? '—'}
+                  </td>
+                  <td className="px-4 py-3 capitalize text-neutral-500">
+                    {p.sport}
                   </td>
                   <td className="px-4 py-3 capitalize text-neutral-500">
                     {p.platform}

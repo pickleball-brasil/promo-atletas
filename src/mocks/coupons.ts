@@ -4,7 +4,6 @@ export const coupons: Coupon[] = [
   {
     id: 'cup-1',
     code: 'ATLETA20',
-    maskedCode: 'ATLE****',
     type: 'percent',
     value: 20,
     store: 'Shopee Sports',
@@ -16,7 +15,6 @@ export const coupons: Coupon[] = [
   {
     id: 'cup-2',
     code: 'RUN15OFF',
-    maskedCode: 'RUN1****',
     type: 'percent',
     value: 15,
     store: 'MercadoLivre',
@@ -28,7 +26,6 @@ export const coupons: Coupon[] = [
   {
     id: 'cup-3',
     code: 'FRETEZERO',
-    maskedCode: 'FRET****',
     type: 'fixed',
     value: 30,
     store: 'Amazon',
@@ -40,7 +37,6 @@ export const coupons: Coupon[] = [
   {
     id: 'cup-4',
     code: 'SUPLEMENTO10',
-    maskedCode: 'SUPL****',
     type: 'fixed',
     value: 10,
     store: 'Netshoes',
@@ -52,7 +48,6 @@ export const coupons: Coupon[] = [
   {
     id: 'cup-5',
     code: 'CORRIDA5',
-    maskedCode: 'CORR****',
     type: 'fixed',
     value: 5,
     store: 'Shopee Sports',
@@ -64,7 +59,6 @@ export const coupons: Coupon[] = [
   {
     id: 'cup-6',
     code: 'MUSCULACAO25',
-    maskedCode: 'MUSC****',
     type: 'percent',
     value: 25,
     store: 'MercadoLivre',

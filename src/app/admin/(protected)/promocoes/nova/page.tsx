@@ -14,6 +14,7 @@ const promotionSchema = z.object({
   imageUrl: z.string().url('URL da imagem inválida'),
   platform: z.enum(['mercadolivre', 'shopee', 'amazon', 'generic'], 'Selecione uma plataforma'),
   categoryId: z.string().min(1, 'Selecione uma categoria'),
+  sport: z.enum(['corrida', 'musculacao', 'crossfit', 'yoga', 'ciclismo', 'futebol', 'tenis', 'natacao'], 'Selecione um esporte'),
   originalPrice: z
     .number('Preço inválido')
     .positive('Preço deve ser positivo'),
@@ -138,6 +139,20 @@ export default function NovaPromocaoPage() {
                   {cat.name}
                 </option>
               ))}
+            </select>
+          </FormField>
+
+          <FormField label="Esporte *" error={errors.sport?.message}>
+            <select {...register('sport')} className={inputClass}>
+              <option value="">Selecione...</option>
+              <option value="corrida">Corrida</option>
+              <option value="musculacao">Musculação</option>
+              <option value="crossfit">Crossfit</option>
+              <option value="yoga">Yoga</option>
+              <option value="ciclismo">Ciclismo</option>
+              <option value="futebol">Futebol</option>
+              <option value="tenis">Tênis</option>
+              <option value="natacao">Natação</option>
             </select>
           </FormField>
 

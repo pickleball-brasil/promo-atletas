@@ -70,7 +70,6 @@ export function SharePromotionButton({
   if (variant === 'compact') {
     return (
       <div className="flex items-center gap-1.5 pt-1">
-        <span className="text-xs text-neutral-400">Compartilhar:</span>
         <button
           type="button"
           onClick={handleWhatsApp}
