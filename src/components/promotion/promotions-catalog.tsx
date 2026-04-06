@@ -25,13 +25,13 @@ const platformOptions: Array<{ value: Platform | 'all'; label: string }> = [
 const sportOptions: Array<{ value: Sport | 'all'; label: string }> = [
   { value: 'all', label: 'Todos os esportes' },
   { value: 'corrida', label: 'Corrida' },
-  { value: 'musculacao', label: 'Musculacao' },
+  { value: 'musculacao', label: 'Musculação' },
   { value: 'crossfit', label: 'Crossfit' },
   { value: 'yoga', label: 'Yoga' },
   { value: 'ciclismo', label: 'Ciclismo' },
   { value: 'futebol', label: 'Futebol' },
-  { value: 'tenis', label: 'Tenis' },
-  { value: 'natacao', label: 'Natacao' },
+  { value: 'tenis', label: 'Tênis' },
+  { value: 'natacao', label: 'Natação' },
 ];
 
 export function PromotionsCatalog() {

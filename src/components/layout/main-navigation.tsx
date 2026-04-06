@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import { TicketPercent, Tags } from 'lucide-react';
 
 const navItems = [
-  { href: '/promocoes', label: 'Promocoes', icon: TicketPercent },
+  { href: '/promocoes', label: 'Promoções', icon: TicketPercent },
   { href: '/cupons', label: 'Cupons', icon: Tags },
 ];
 

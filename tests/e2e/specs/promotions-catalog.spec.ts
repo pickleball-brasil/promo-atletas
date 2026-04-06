@@ -35,7 +35,7 @@ test.describe('F01 - Catalogo de Promocoes', () => {
 
     await promotionsPage.goto();
     await promotionsPage.openFiltersIfCollapsed();
-    await promotionsPage.selectCategory('Calcados');
+    await promotionsPage.selectCategory('Calçados');
 
     await expect(promotionsPage.cards).toHaveCount(1);
     await expect(
