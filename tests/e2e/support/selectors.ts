@@ -1,0 +1,38 @@
+export const selectors = {
+  promotionsPage: {
+    title: 'promotions-title',
+    searchInput: 'promotions-search-input',
+    categorySelect: 'promotions-category-select',
+    platformSelect: 'promotions-platform-select',
+    sortSelect: 'promotions-sort-select',
+    filtersToggle: 'promotions-filters-toggle',
+    clearFilters: 'promotions-clear-filters',
+    resultsCount: 'promotions-results-count',
+    list: 'promotions-list',
+    loadMore: 'promotions-load-more',
+    emptyState: 'promotions-empty-state',
+  },
+  promotionCard: {
+    container: 'promotion-card',
+    title: 'promotion-card-title',
+    discount: 'promotion-card-discount',
+    platform: 'promotion-card-platform',
+    promoPrice: 'promotion-card-promo-price',
+    couponCode: 'promotion-card-coupon-code',
+    couponCopy: 'promotion-card-coupon-copy',
+  },
+  promotionDetails: {
+    couponCode: 'promotion-details-coupon-code',
+    couponCopy: 'promotion-details-coupon-copy',
+    finalPrice: 'promotion-details-final-price',
+    finalPriceNote: 'promotion-details-final-price-note',
+  },
+  couponsPage: {
+    title: 'coupons-title',
+    card: 'coupon-card',
+    code: 'coupon-code',
+    copyButton: 'coupon-copy-button',
+    availableCount: 'coupons-available-count',
+    unavailableCount: 'coupons-unavailable-count',
+  },
+} as const;
