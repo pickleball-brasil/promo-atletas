@@ -16,7 +16,16 @@ export class PromotionsPage {
   }
 
   async search(term: string) {
-    await this.page.getByTestId(selectors.promotionsPage.searchInput).fill(term);
+    // O input do nav (desktop) fica oculto no mobile; usa o primeiro visível
+    const navInput = this.page.getByTestId(selectors.promotionsPage.searchInput).first();
+    const isVisible = await navInput.isVisible();
+    if (isVisible) {
+      await navInput.fill(term);
+    } else {
+      // mobile: abre filtros e usa o input mobile
+      await this.openFiltersIfCollapsed();
+      await this.page.getByTestId('promotions-search-input-mobile').fill(term);
+    }
   }
 
   async selectCategory(label: string) {

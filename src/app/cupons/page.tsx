@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export default function CuponsPage() {
   return (
     <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6 sm:px-6 sm:py-10">
-      <header className="mb-6 animate-fade-in-up">
+      <header data-mobile-submenu-anchor className="mb-6 animate-fade-in-up">
         <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-50 px-3 py-1 text-xs font-bold uppercase tracking-wide text-brand-600">
           <Scissors size={12} aria-hidden />
           Economia imediata

@@ -18,7 +18,7 @@ function buildUrl(slug: string) {
 
 function buildWhatsAppUrl(title: string, slug: string, price: string) {
   const url = buildUrl(slug);
-  const text = `🏃 *${title}*\n💰 Por apenas *${price}*!\n\nVeja a oferta completa: ${url}`;
+  const text = `*${title}*\nPor apenas *${price}*!\n\nVeja a oferta completa: ${url}`;
   return `https://wa.me/?text=${encodeURIComponent(text)}`;
 }
 

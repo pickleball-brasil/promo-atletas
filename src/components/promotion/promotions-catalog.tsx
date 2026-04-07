@@ -1,7 +1,8 @@
 'use client';
 
 import { useMemo, useState, useEffect } from 'react';
-import { Search, SlidersHorizontal, X, Grid3x3, List } from 'lucide-react';
+import { useSearchParams, useRouter } from 'next/navigation';
+import { SlidersHorizontal, X, Grid3x3, List, Dumbbell, Tag, ShoppingBag, ArrowUpDown, ChevronDown } from 'lucide-react';
 
 import { categories, promotions } from '@/mocks';
 import { testIds } from '@/lib/test-ids';
@@ -35,7 +36,9 @@ const sportOptions: Array<{ value: Sport | 'all'; label: string }> = [
 ];
 
 export function PromotionsCatalog() {
-  const [searchTerm, setSearchTerm] = useState<string>('');
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const searchTerm = searchParams.get('q') ?? '';
   const [isFiltersOpen, setIsFiltersOpen] = useState<boolean>(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedSport, setSelectedSport] = useState<Sport | 'all'>('all');
@@ -108,143 +111,153 @@ export function PromotionsCatalog() {
   };
 
   const clearFilters = () => {
-    setSearchTerm('');
     setSelectedCategory('all');
     setSelectedSport('all');
     setSelectedPlatform('all');
     setSortBy('latest');
     setVisibleCount(ITEMS_PER_PAGE);
+    router.replace('/promocoes');
   };
 
   return (
-    <section className="space-y-5" data-testid="promotions-catalog-root">
+    <section className="space-y-4" data-testid="promotions-catalog-root">
 
-      {/* Barra superior: toggle mobile + busca */}
-      <div className="rounded-2xl bg-white shadow-sm">
+      {/* Barra de filtros compacta */}
+      <div className="flex flex-wrap items-center gap-2">
 
-        {/* Cabeçalho do painel — toggle mobile */}
-        <div className="flex items-center gap-3 px-4 py-3 sm:hidden">
-          <button
-            type="button"
-            onClick={() => setIsFiltersOpen((open) => !open)}
-            data-testid={testIds.promotionsPage.filtersToggle}
-            className="inline-flex items-center gap-2 rounded-xl border border-neutral-200 px-3 py-2 text-sm font-semibold text-neutral-700 transition hover:bg-neutral-50"
-          >
-            <SlidersHorizontal size={15} aria-hidden />
-            Filtros
-            {hasActiveFilters && (
-              <span className="size-2 rounded-full bg-brand-500" aria-label="Filtros ativos" />
-            )}
-          </button>
-          <span className="ml-auto text-sm text-neutral-500">{sorted.length} resultados</span>
+        {/* Toggle mobile — só no mobile */}
+        <button
+          type="button"
+          onClick={() => setIsFiltersOpen((open) => !open)}
+          data-testid={testIds.promotionsPage.filtersToggle}
+          className="inline-flex items-center gap-1.5 rounded-lg border border-neutral-300 bg-white px-3 py-1.5 text-xs font-semibold text-neutral-700 transition hover:bg-neutral-50 sm:hidden"
+        >
+          <SlidersHorizontal size={13} aria-hidden />
+          Filtros
+          {hasActiveFilters && <span className="size-1.5 rounded-full bg-brand-500" aria-label="Filtros ativos" />}
+        </button>
+
+        {/* Search mobile — só no mobile, dentro do painel expansível */}
+        <div className={`${isFiltersOpen ? 'flex' : 'hidden'} w-full sm:hidden`}>
+          <input
+            type="search"
+            value={searchTerm}
+            data-testid="promotions-search-input-mobile"
+            onChange={(event) => {
+              const params = new URLSearchParams(searchParams.toString());
+              if (event.target.value) params.set('q', event.target.value);
+              else params.delete('q');
+              router.replace(`/promocoes?${params.toString()}`);
+              setVisibleCount(ITEMS_PER_PAGE);
+            }}
+            placeholder="Buscar promoções…"
+            className="w-full rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs text-neutral-700 outline-none transition placeholder:text-neutral-400 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
+          />
         </div>
 
-        {/* Painel de filtros */}
-        <div className={`${isFiltersOpen ? 'block' : 'hidden sm:block'} border-t border-neutral-100 p-4 sm:border-t-0`}>
-          <div className="flex flex-col gap-3">
-            <div className="flex flex-col gap-3 lg:flex-row lg:flex-nowrap lg:items-center">
-              <div className="relative lg:min-w-0 lg:flex-[2]">
-                <Search size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-brand-500" aria-hidden />
-                <input
-                  type="search"
-                  value={searchTerm}
-                  data-testid={testIds.promotionsPage.searchInput}
-                  onChange={(event) => handleFiltersChange(() => setSearchTerm(event.target.value))}
-                  placeholder="Buscar por título ou descrição…"
-                  className="w-full rounded-xl border border-brand-500/70 bg-brand-50/30 py-3 pl-10 pr-4 text-sm font-medium text-neutral-700 outline-none transition placeholder:text-neutral-400 focus:border-brand-500 focus:bg-white focus:ring-2 focus:ring-brand-500/20"
-                />
-              </div>
+        {/* Selects — visíveis sempre no sm+, colapsáveis no mobile */}
+        <div className={`${isFiltersOpen ? 'flex' : 'hidden sm:flex'} flex-wrap items-center gap-2 w-full sm:w-auto`}>
+          <div className="relative">
+            <Dumbbell size={12} className="pointer-events-none absolute left-2 top-1/2 -translate-y-1/2 text-brand-500" aria-hidden />
+            <ChevronDown size={14} className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-neutral-400" aria-hidden />
+            <select
+              value={selectedSport}
+              onChange={(event) => handleFiltersChange(() => setSelectedSport(event.target.value as Sport | 'all'))}
+              className="cursor-pointer appearance-none rounded-lg border border-neutral-200 bg-white py-1.5 pl-6 pr-6 text-xs text-neutral-600 outline-none transition focus:border-brand-500 focus:ring-1 focus:ring-brand-500/20"
+            >
+              {sportOptions.map((sport) => (
+                <option key={sport.value} value={sport.value}>{sport.label}</option>
+              ))}
+            </select>
+          </div>
 
-              <select
-                value={selectedCategory}
-                data-testid={testIds.promotionsPage.categorySelect}
-                onChange={(event) => handleFiltersChange(() => setSelectedCategory(event.target.value))}
-                className="w-full rounded-xl border border-neutral-200 bg-white px-2.5 py-2 text-xs text-neutral-600 outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 lg:w-[170px] lg:flex-none"
-              >
-                <option value="all">Categoria: todas</option>
-                {categories.map((category) => (
-                  <option key={category.id} value={category.id}>{category.name}</option>
-                ))}
-              </select>
+          <div className="relative">
+            <Tag size={12} className="pointer-events-none absolute left-2 top-1/2 -translate-y-1/2 text-brand-500" aria-hidden />
+            <ChevronDown size={14} className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-neutral-400" aria-hidden />
+            <select
+              value={selectedCategory}
+              data-testid={testIds.promotionsPage.categorySelect}
+              onChange={(event) => handleFiltersChange(() => setSelectedCategory(event.target.value))}
+              className="cursor-pointer appearance-none rounded-lg border border-neutral-200 bg-white py-1.5 pl-6 pr-6 text-xs text-neutral-600 outline-none transition focus:border-brand-500 focus:ring-1 focus:ring-brand-500/20"
+            >
+              <option value="all">Categoria</option>
+              {categories.map((category) => (
+                <option key={category.id} value={category.id}>{category.name}</option>
+              ))}
+            </select>
+          </div>
 
-              <select
-                value={selectedPlatform}
-                data-testid={testIds.promotionsPage.platformSelect}
-                onChange={(event) => handleFiltersChange(() => setSelectedPlatform(event.target.value as Platform | 'all'))}
-                className="w-full rounded-xl border border-neutral-200 bg-white px-2.5 py-2 text-xs text-neutral-600 outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 lg:w-[155px] lg:flex-none"
-              >
-                {platformOptions.map((platform) => (
-                  <option key={platform.value} value={platform.value}>{platform.label}</option>
-                ))}
-              </select>
+          <div className="relative">
+            <ShoppingBag size={12} className="pointer-events-none absolute left-2 top-1/2 -translate-y-1/2 text-brand-500" aria-hidden />
+            <ChevronDown size={14} className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-neutral-400" aria-hidden />
+            <select
+              value={selectedPlatform}
+              data-testid={testIds.promotionsPage.platformSelect}
+              onChange={(event) => handleFiltersChange(() => setSelectedPlatform(event.target.value as Platform | 'all'))}
+              className="cursor-pointer appearance-none rounded-lg border border-neutral-200 bg-white py-1.5 pl-6 pr-6 text-xs text-neutral-600 outline-none transition focus:border-brand-500 focus:ring-1 focus:ring-brand-500/20"
+            >
+              {platformOptions.map((platform) => (
+                <option key={platform.value} value={platform.value}>{platform.label}</option>
+              ))}
+            </select>
+          </div>
 
-              <select
-                value={selectedSport}
-                onChange={(event) => handleFiltersChange(() => setSelectedSport(event.target.value as Sport | 'all'))}
-                className="w-full rounded-xl border border-neutral-200 bg-white px-2.5 py-2 text-xs text-neutral-600 outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 lg:w-[150px] lg:flex-none"
-              >
-                {sportOptions.map((sport) => (
-                  <option key={sport.value} value={sport.value}>{sport.label}</option>
-                ))}
-              </select>
+          <div className="relative">
+            <ArrowUpDown size={12} className="pointer-events-none absolute left-2 top-1/2 -translate-y-1/2 text-brand-500" aria-hidden />
+            <ChevronDown size={14} className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-neutral-400" aria-hidden />
+            <select
+              value={sortBy}
+              data-testid={testIds.promotionsPage.sortSelect}
+              onChange={(event) => handleFiltersChange(() => setSortBy(event.target.value as SortOption))}
+              className="cursor-pointer appearance-none rounded-lg border border-neutral-200 bg-white py-1.5 pl-6 pr-6 text-xs text-neutral-600 outline-none transition focus:border-brand-500 focus:ring-1 focus:ring-brand-500/20"
+            >
+              <option value="latest">Mais recente</option>
+              <option value="discount">Maior desconto</option>
+              <option value="clicks">Mais clicado</option>
+            </select>
+          </div>
 
-              <select
-                value={sortBy}
-                data-testid={testIds.promotionsPage.sortSelect}
-                onChange={(event) => handleFiltersChange(() => setSortBy(event.target.value as SortOption))}
-                className="w-full rounded-xl border border-neutral-200 bg-white px-2.5 py-2 text-xs text-neutral-600 outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 lg:w-[150px] lg:flex-none"
-              >
-                <option value="latest">Mais recente</option>
-                <option value="discount">Maior desconto</option>
-                <option value="clicks">Mais clicado</option>
-              </select>
+          {hasActiveFilters && (
+            <button
+              type="button"
+              onClick={clearFilters}
+              data-testid={testIds.promotionsPage.clearFilters}
+              className="inline-flex items-center gap-1 rounded-lg border border-neutral-200 bg-white px-2 py-1.5 text-xs font-semibold text-neutral-500 transition hover:border-danger-500 hover:text-danger-500"
+            >
+              <X size={12} aria-hidden />
+              Limpar
+            </button>
+          )}
+        </div>
 
-              <button
-                type="button"
-                onClick={clearFilters}
-                disabled={!hasActiveFilters}
-                data-testid={testIds.promotionsPage.clearFilters}
-                className="inline-flex min-h-[36px] w-full items-center justify-center gap-1.5 rounded-xl border border-neutral-200 bg-white px-2.5 py-2 text-xs font-semibold text-neutral-500 transition hover:border-danger-500 hover:text-danger-500 disabled:cursor-not-allowed disabled:opacity-40 lg:w-auto lg:flex-none"
-              >
-                <X size={14} aria-hidden />
-                Limpar
-              </button>
-            </div>
-
-            {/* View mode toggle */}
-            <div className="hidden sm:flex gap-1.5 justify-end sm:justify-start">
-              <button
-                type="button"
-                onClick={() => handleViewModeChange('grid')}
-                title="Visualizar em grid"
-                className={`inline-flex items-center justify-center rounded-lg px-3 py-2 text-sm font-semibold transition ${
-                  viewMode === 'grid'
-                    ? 'bg-brand-500 text-white'
-                    : 'border border-neutral-200 text-neutral-600 hover:bg-neutral-50'
-                }`}
-              >
-                <Grid3x3 size={16} aria-hidden />
-              </button>
-              <button
-                type="button"
-                onClick={() => handleViewModeChange('list')}
-                title="Visualizar em lista"
-                className={`inline-flex items-center justify-center rounded-lg px-3 py-2 text-sm font-semibold transition ${
-                  viewMode === 'list'
-                    ? 'bg-brand-500 text-white'
-                    : 'border border-neutral-200 text-neutral-600 hover:bg-neutral-50'
-                }`}
-              >
-                <List size={16} aria-hidden />
-              </button>
-            </div>
+        {/* Resultados + view toggle — empurrados para a direita */}
+        <div className="ml-auto flex items-center gap-2">
+          <span data-testid={testIds.promotionsPage.resultsCount} className="hidden text-xs text-neutral-400 sm:block">{sorted.length} resultado{sorted.length !== 1 ? 's' : ''}</span>
+          <div className="hidden sm:flex items-center gap-1 rounded-lg border border-neutral-200 bg-white p-0.5">
+            <button
+              type="button"
+              onClick={() => handleViewModeChange('grid')}
+              title="Visualizar em grid"
+              className={`inline-flex items-center justify-center rounded-md p-1.5 transition ${
+                viewMode === 'grid' ? 'bg-neutral-900 text-white' : 'text-neutral-500 hover:text-neutral-700'
+              }`}
+            >
+              <Grid3x3 size={14} aria-hidden />
+            </button>
+            <button
+              type="button"
+              onClick={() => handleViewModeChange('list')}
+              title="Visualizar em lista"
+              className={`inline-flex items-center justify-center rounded-md p-1.5 transition ${
+                viewMode === 'list' ? 'bg-neutral-900 text-white' : 'text-neutral-500 hover:text-neutral-700'
+              }`}
+            >
+              <List size={14} aria-hidden />
+            </button>
           </div>
         </div>
-      </div>
 
-      <p data-testid={testIds.promotionsPage.resultsCount} className="hidden text-sm text-neutral-400 sm:block">
-        {sorted.length} promoc{sorted.length === 1 ? 'ao encontrada' : 'oes encontradas'}
-      </p>
+      </div>
 
       {sorted.length === 0 ? (
         <div

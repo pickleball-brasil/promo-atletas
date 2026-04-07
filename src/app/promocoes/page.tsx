@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import { PromotionsCatalog } from '@/components/promotion/promotions-catalog';
 import { testIds } from '@/lib/test-ids';
 import { Flame, Sparkles } from 'lucide-react';
@@ -13,7 +14,7 @@ export const metadata: Metadata = {
 export default function PromocoesPage() {
   return (
     <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6 sm:px-6 sm:py-10">
-      <div className="mb-5 animate-fade-in-up sm:mb-6">
+      <div data-mobile-submenu-anchor className="mb-5 animate-fade-in-up sm:mb-6">
         <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-50 px-3 py-1 text-xs font-bold uppercase tracking-wide text-brand-600">
           <Sparkles size={12} aria-hidden />
           Curadoria ativa
@@ -26,11 +27,13 @@ export default function PromocoesPage() {
           Promoções
         </h1>
         <p className="mt-1 text-sm text-neutral-500 sm:text-base">
-          Encontre ofertas esportivas com melhores descontos por categoria e plataforma.
+          Filtre por esporte, categoria ou plataforma e encontre as melhores ofertas para o seu treino.
         </p>
       </div>
 
-      <PromotionsCatalog />
+      <Suspense>
+        <PromotionsCatalog />
+      </Suspense>
     </main>
   );
 }
