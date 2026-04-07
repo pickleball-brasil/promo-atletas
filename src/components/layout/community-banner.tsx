@@ -54,27 +54,18 @@ export function CommunityBanner() {
             href="https://t.me/promoatletas"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 rounded-lg bg-white/15 px-2.5 py-1.5 text-xs font-semibold text-white ring-1 ring-inset ring-white/30 transition hover:bg-white/25"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-white px-2.5 py-1.5 text-xs font-semibold text-brand-500 ring-1 ring-inset ring-white/70 transition hover:bg-brand-50"
           >
             <Send size={13} aria-hidden />
-            Telegram
+            Comunidade Telegram
           </Link>
 
-          <Link
-            href="https://wa.me/5511999999999"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 rounded-lg bg-white/15 px-2.5 py-1.5 text-xs font-semibold text-white ring-1 ring-inset ring-white/30 transition hover:bg-white/25"
-          >
-            <MessageCircle size={13} aria-hidden />
-            WhatsApp
-          </Link>
 
           <button
             type="button"
             onClick={dismissBanner}
             aria-label="Fechar banner da comunidade"
-            className="inline-flex size-7 items-center justify-center rounded-md bg-black/15 text-white transition hover:bg-black/25"
+            className="cursor-pointer inline-flex size-7 items-center justify-center rounded-md bg-black/15 text-white transition hover:bg-black/25"
           >
             <X size={14} aria-hidden />
           </button>

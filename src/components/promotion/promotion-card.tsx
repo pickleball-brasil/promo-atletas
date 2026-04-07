@@ -1,8 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { BadgePercent, ExternalLink, Store, Ticket } from 'lucide-react';
+import { ExternalLink, Store, Ticket } from 'lucide-react';
+import { useState } from 'react';
 
-import { CopyCouponButton } from '@/components/coupon';
 import { SharePromotionButton } from './share-promotion-button';
 import { isCouponUsable } from '@/lib/coupons';
 import { getCouponById } from '@/lib/promotions';
@@ -27,17 +27,67 @@ const platformBadgeClass: Record<Promotion['platform'], string> = {
 interface PromotionCardProps {
   promotion: Promotion;
   priority?: boolean;
+  compact?: boolean;
 }
 
-export function PromotionCard({ promotion, priority = false }: PromotionCardProps) {
+export function PromotionCard({ promotion, priority = false, compact = false }: PromotionCardProps) {
   const coupon = getCouponById(promotion.couponId);
   const usableCoupon = coupon && isCouponUsable(coupon) ? coupon : undefined;
+  const [countdown, setCountdown] = useState<number | null>(null);
+  const [isRedirecting, setIsRedirecting] = useState(false);
+
+  const handleGoToStore = async () => {
+    if (isRedirecting) return;
+
+    setIsRedirecting(true);
+
+    if (usableCoupon) {
+      try {
+        await navigator.clipboard.writeText(usableCoupon.code);
+      } catch {
+        // clipboard indisponivel: segue para a loja mesmo assim
+      }
+
+      for (let remaining = 4; remaining > 0; remaining -= 1) {
+        setCountdown(remaining);
+        await new Promise((resolve) => window.setTimeout(resolve, 1000));
+      }
+
+      setCountdown(null);
+    }
+
+    setIsRedirecting(false);
+
+    window.open(`/r/${promotion.slug}`, '_blank', 'noopener,noreferrer');
+  };
 
   return (
     <article
       data-testid={testIds.promotionCard.container}
-      className="surface-card relative overflow-hidden rounded-xl transition duration-200 hover:-translate-y-0.5 hover:shadow-lg"
+      className={`surface-card group relative w-full overflow-hidden rounded-xl transition duration-200 hover:-translate-y-0.5 hover:shadow-lg ${compact ? 'sm:mx-auto sm:max-w-[19rem]' : ''}`}
     >
+      <Link
+        href={`/promocoes/${promotion.slug}`}
+        data-testid={testIds.promotionCard.detailsLink}
+        aria-label={`Ver detalhes de ${promotion.title}`}
+        className="absolute inset-0 z-10"
+      />
+
+      {usableCoupon ? (
+        <div className="pointer-events-none absolute left-3 right-3 top-3 z-20">
+          <div className="flex items-center gap-2 rounded-lg border border-neutral-300/80 bg-white px-2.5 py-1.5">
+            <Ticket size={14} className="shrink-0 text-brand-500" aria-hidden />
+            <code
+              data-testid={testIds.promotionCard.couponCode}
+              className="min-w-0 flex-1 truncate font-mono text-xs font-semibold text-neutral-900"
+            >
+              {usableCoupon.code}
+            </code>
+            <span className="text-[10px] font-semibold uppercase tracking-wide text-success-500">cupom</span>
+          </div>
+        </div>
+      ) : null}
+
       <div className="relative h-36 w-full bg-neutral-100 sm:h-40">
         <Image
           src={promotion.imageUrl}
@@ -49,16 +99,9 @@ export function PromotionCard({ promotion, priority = false }: PromotionCardProp
         />
       </div>
 
-      <div className="flex flex-col gap-3 p-3 pb-12">
-        <div>
+      <div className="pointer-events-none relative z-20 flex flex-col gap-2.5 p-3 pb-3">
+        <div className="space-y-2.5">
           <div className="flex items-center justify-between gap-2">
-            <span
-              data-testid={testIds.promotionCard.discount}
-              className="inline-flex items-center gap-1 rounded-full bg-brand-500 px-2 py-0.5 text-[11px] font-bold text-white"
-            >
-              <BadgePercent size={12} aria-hidden />
-              -{promotion.discountPercent}%
-            </span>
             <span
               data-testid={testIds.promotionCard.platform}
               className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold ${platformBadgeClass[promotion.platform]}`}
@@ -66,69 +109,74 @@ export function PromotionCard({ promotion, priority = false }: PromotionCardProp
               <Store size={12} aria-hidden />
               {platformLabel[promotion.platform]}
             </span>
+
+            <div className="pointer-events-auto">
+              <SharePromotionButton
+                slug={promotion.slug}
+                title={promotion.title}
+                price={formatCurrency(promotion.promoPrice)}
+                variant="compact"
+              />
+            </div>
           </div>
 
           <h2
             data-testid={testIds.promotionCard.title}
-            className="mt-2.5 line-clamp-2 text-sm font-semibold leading-snug text-neutral-900"
+            className="line-clamp-2 text-sm font-semibold leading-snug text-neutral-900 transition-colors duration-200 group-hover:text-brand-500"
           >
             {promotion.title}
           </h2>
 
-          <div className="mt-2.5 space-y-0.5 rounded-lg border border-neutral-300/80 bg-white p-2">
-            <p data-testid={testIds.promotionCard.originalPrice} className="text-xs text-neutral-500 line-through">
+          <div className="space-y-0.5">
+            <p className="text-xs text-neutral-500 line-through" data-testid={testIds.promotionCard.originalPrice}>
               {formatCurrency(promotion.originalPrice)}
             </p>
-            <p data-testid={testIds.promotionCard.promoPrice} className="text-lg font-bold text-neutral-900">
-              {formatCurrency(promotion.promoPrice)}
-            </p>
+            <div className="flex items-center gap-1.5">
+              <p data-testid={testIds.promotionCard.promoPrice} className="text-lg font-bold leading-tight text-neutral-900">
+                {formatCurrency(promotion.promoPrice)}
+              </p>
+              <span data-testid={testIds.promotionCard.discount} className="text-sm font-semibold text-success-500">
+                {promotion.discountPercent}%
+              </span>
+              {usableCoupon ? (
+                <span className="inline-flex items-center rounded-full bg-success-50 px-1.5 py-0.5 text-[10px] font-semibold leading-none text-success-500">
+                  com cupom
+                </span>
+              ) : null}
+            </div>
           </div>
 
-          {usableCoupon ? (
-            <div className="mt-2.5 flex items-center gap-2 rounded-lg border border-neutral-300/80 bg-white px-2.5 py-1.5">
-              <Ticket size={14} className="shrink-0 text-brand-500" aria-hidden />
-              <code
-                data-testid={testIds.promotionCard.couponCode}
-                className="min-w-0 flex-1 truncate font-mono text-xs font-semibold text-neutral-900"
-              >
-                {usableCoupon.code}
-              </code>
-              <CopyCouponButton
-                couponCode={usableCoupon.code}
-                testId={testIds.promotionCard.couponCopy}
-                className="shrink-0 rounded-md border border-brand-500 px-2 py-1 text-[11px] font-semibold text-brand-500 transition duration-200 hover:bg-brand-50"
-              />
-            </div>
-          ) : null}
-
-          <div className="mt-2.5 flex flex-col gap-1.5 sm:flex-row">
-            <Link
-              href={`/promocoes/${promotion.slug}`}
-              data-testid={testIds.promotionCard.detailsLink}
-              className="inline-flex min-h-10 flex-1 items-center justify-center rounded-lg border border-brand-500 px-2.5 py-2 text-xs font-semibold text-brand-500 transition duration-200 hover:bg-brand-50"
-            >
-              Ver detalhes
-            </Link>
-            <Link
-              href={`/r/${promotion.slug}`}
+          <div className="flex">
+            <button
+              type="button"
+              onClick={handleGoToStore}
               data-testid={testIds.promotionCard.offerLink}
-              className="inline-flex min-h-10 flex-1 items-center justify-center gap-1.5 rounded-lg bg-brand-500 px-2.5 py-2 text-xs font-semibold text-white transition duration-200 hover:bg-brand-400"
+              disabled={isRedirecting}
+              className="pointer-events-auto inline-flex min-h-10 w-full cursor-pointer items-center justify-center gap-1.5 rounded-lg bg-brand-500 px-2.5 py-2 text-xs font-semibold text-white transition duration-200 hover:bg-brand-400 disabled:cursor-not-allowed"
             >
-              Ver oferta
+              {usableCoupon ? 'Copiar cupom e ir pra loja' : 'Ir direto para loja'}
               <ExternalLink size={14} aria-hidden />
-            </Link>
+            </button>
           </div>
         </div>
       </div>
 
-      <div className="absolute bottom-2 right-3">
-        <SharePromotionButton
-          slug={promotion.slug}
-          title={promotion.title}
-          price={formatCurrency(promotion.promoPrice)}
-          variant="compact"
-        />
-      </div>
+      {usableCoupon && countdown ? (
+        <div className="pointer-events-none absolute inset-0 z-30 flex items-center justify-center bg-neutral-900/55 p-4">
+          <div className="max-w-[260px] rounded-xl border border-success-500/40 bg-white px-3 py-2 text-center shadow-lg">
+            <p className="text-xs font-semibold text-success-500">
+              Cupom copiado com sucesso!
+            </p>
+            <p className="mt-2 text-[11px] text-neutral-700">
+              Na loja, cole o cupom <strong>{usableCoupon.code}</strong> no campo de cupom ao finalizar a compra.
+            </p>
+            <p className="mt-2 text-[11px] font-semibold text-neutral-900">
+              Abrindo a loja em {countdown} segundos...
+            </p>
+          </div>
+        </div>
+      ) : null}
+
     </article>
   );
 }

@@ -75,7 +75,7 @@ export function SharePromotionButton({
           onClick={handleWhatsApp}
           aria-label="Compartilhar no WhatsApp"
           title="Compartilhar no WhatsApp"
-          className="inline-flex size-8 items-center justify-center rounded-lg text-neutral-500 transition duration-200 hover:-translate-y-0.5 hover:bg-[#25D366]/10 hover:text-[#25D366]"
+          className="inline-flex size-8 cursor-pointer items-center justify-center rounded-lg text-neutral-500 transition duration-200 hover:-translate-y-0.5 hover:bg-[#25D366]/10 hover:text-[#25D366]"
         >
           <WhatsAppIcon />
         </button>
@@ -84,7 +84,7 @@ export function SharePromotionButton({
           onClick={handleShare}
           aria-label={copied ? 'Link copiado!' : 'Compartilhar link'}
           title={copied ? 'Link copiado!' : 'Compartilhar link'}
-          className="inline-flex size-8 items-center justify-center rounded-lg text-neutral-500 transition duration-200 hover:-translate-y-0.5 hover:bg-neutral-100 hover:text-neutral-700"
+          className="inline-flex size-8 cursor-pointer items-center justify-center rounded-lg text-neutral-500 transition duration-200 hover:-translate-y-0.5 hover:bg-neutral-100 hover:text-neutral-700"
         >
           {copied ? (
             <Check size={14} className="text-success-500" aria-hidden />
@@ -101,7 +101,7 @@ export function SharePromotionButton({
       <button
         type="button"
         onClick={handleWhatsApp}
-        className="inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl border border-[#25D366] bg-[#25D366]/5 px-4 py-2.5 text-sm font-semibold text-[#25D366] transition duration-200 hover:-translate-y-0.5 hover:bg-[#25D366]/10"
+        className="inline-flex min-h-11 flex-1 cursor-pointer items-center justify-center gap-2 rounded-xl border border-[#25D366] bg-[#25D366]/5 px-4 py-2.5 text-sm font-semibold text-[#25D366] transition duration-200 hover:-translate-y-0.5 hover:bg-[#25D366]/10"
       >
         <WhatsAppIcon />
         Compartilhar no WhatsApp
@@ -110,7 +110,7 @@ export function SharePromotionButton({
         type="button"
         onClick={handleShare}
         aria-label={copied ? 'Link copiado!' : 'Copiar link da promoção'}
-        className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-neutral-300 bg-white px-4 py-2.5 text-sm font-semibold text-neutral-700 transition duration-200 hover:-translate-y-0.5 hover:shadow-sm sm:w-auto"
+        className="inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-xl border border-neutral-300 bg-white px-4 py-2.5 text-sm font-semibold text-neutral-700 transition duration-200 hover:-translate-y-0.5 hover:shadow-sm sm:w-auto"
       >
         {copied ? (
           <>

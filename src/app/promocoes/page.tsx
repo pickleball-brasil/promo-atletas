@@ -27,7 +27,7 @@ export default function PromocoesPage() {
           Promoções
         </h1>
         <p className="mt-1 text-sm text-neutral-500 sm:text-base">
-          Filtre por esporte, categoria ou plataforma e encontre as melhores ofertas para o seu treino.
+          Filtre por esporte, categoria ou plataforma e encontre as melhores ofertas para você.
         </p>
       </div>
 
