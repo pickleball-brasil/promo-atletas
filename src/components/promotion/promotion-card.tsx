@@ -64,7 +64,7 @@ export function PromotionCard({ promotion, priority = false, compact = false }: 
   return (
     <article
       data-testid={testIds.promotionCard.container}
-      className={`surface-card group relative w-full overflow-hidden rounded-xl transition duration-200 hover:-translate-y-0.5 hover:shadow-lg ${compact ? 'sm:mx-auto sm:max-w-[19rem]' : ''}`}
+      className={`group relative w-full overflow-hidden rounded-xl bg-white transition duration-200 hover:-translate-y-0.5 ${compact ? 'sm:mx-auto sm:max-w-[19rem]' : ''}`}
     >
       <Link
         href={`/promocoes/${promotion.slug}`}
@@ -136,7 +136,7 @@ export function PromotionCard({ promotion, priority = false, compact = false }: 
                 {formatCurrency(promotion.promoPrice)}
               </p>
               <span data-testid={testIds.promotionCard.discount} className="text-sm font-semibold text-success-500">
-                {promotion.discountPercent}%
+                {promotion.discountPercent}% off
               </span>
               {usableCoupon ? (
                 <span className="inline-flex items-center rounded-full bg-success-50 px-1.5 py-0.5 text-[10px] font-semibold leading-none text-success-500">

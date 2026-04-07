@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { X, Grid3x3, List, Dumbbell, Tag, ShoppingBag, ArrowUpDown, ChevronDown } from 'lucide-react';
 
@@ -44,15 +44,11 @@ export function PromotionsCatalog() {
   const [selectedPlatform, setSelectedPlatform] = useState<Platform | 'all'>('all');
   const [sortBy, setSortBy] = useState<SortOption>('latest');
   const [visibleCount, setVisibleCount] = useState<number>(ITEMS_PER_PAGE);
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-
-  // Load view mode preference from localStorage
-  useEffect(() => {
-    const savedViewMode = localStorage.getItem('promo-atletas:view-mode') as 'grid' | 'list' | null;
-    if (savedViewMode) {
-      setViewMode(savedViewMode);
-    }
-  }, []);
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>(() => {
+    if (typeof window === 'undefined') return 'grid';
+    const saved = localStorage.getItem('promo-atletas:view-mode');
+    return saved === 'list' ? 'list' : 'grid';
+  });
 
   // Save view mode preference to localStorage
   const handleViewModeChange = (mode: 'grid' | 'list') => {

@@ -162,7 +162,7 @@ export default async function PromotionDetailsPage({
                   {formatCurrency(promotion.promoPrice)}
                 </p>
                 <span className="pb-0.5 text-base font-semibold text-success-500">
-                  {promotion.discountPercent}%
+                  {promotion.discountPercent}% off
                 </span>
                 {usableCoupon ? (
                   <span className="mb-1 inline-flex items-center rounded-full bg-success-50 px-2 py-0.5 text-[10px] font-semibold leading-none text-success-500">

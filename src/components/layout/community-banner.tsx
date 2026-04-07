@@ -2,30 +2,24 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { MessageCircle, Send, X } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { Send, X } from 'lucide-react';
+import { useState } from 'react';
 
 const DISMISS_KEY = 'promo-atletas:community-banner:hidden-until';
 const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
 
 export function CommunityBanner() {
   const pathname = usePathname();
-  const [visible, setVisible] = useState(true);
-
-  useEffect(() => {
-    if (pathname.startsWith('/admin')) return;
-
+  const [visible, setVisible] = useState(() => {
+    if (typeof window === 'undefined') return true;
     try {
       const hiddenUntilRaw = window.localStorage.getItem(DISMISS_KEY);
       const hiddenUntil = hiddenUntilRaw ? Number(hiddenUntilRaw) : 0;
-
-      if (hiddenUntil && !Number.isNaN(hiddenUntil) && Date.now() < hiddenUntil) {
-        setVisible(false);
-      }
+      return !(hiddenUntil && !Number.isNaN(hiddenUntil) && Date.now() < hiddenUntil);
     } catch {
-      // localStorage indisponivel — manter visivel
+      return true;
     }
-  }, [pathname]);
+  });
 
   if (pathname.startsWith('/admin') || !visible) return null;
 
