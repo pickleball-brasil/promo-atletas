@@ -107,27 +107,30 @@ export default async function PromotionDetailsPage({
       <div className="mb-4">
         <Link
           href="/promocoes"
-          className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm font-semibold text-neutral-700 hover:bg-neutral-100"
+          className="group inline-flex items-center gap-2 text-sm font-semibold text-neutral-500 transition-colors duration-200 hover:text-brand-500"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <path d="M19 12H5M12 5l-7 7 7 7" />
-          </svg>
+          <span className="inline-flex size-8 items-center justify-center rounded-full border border-neutral-200 bg-white transition duration-200 group-hover:border-brand-400 group-hover:bg-brand-50">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M19 12H5M12 5l-7 7 7 7" />
+            </svg>
+          </span>
           Voltar para promoções
         </Link>
       </div>
 
-      <article className="overflow-hidden rounded-2xl border border-neutral-300 bg-white shadow-sm">
+      <article
+        className="overflow-hidden rounded-2xl border border-neutral-300 bg-white shadow-sm">
         <div className="grid grid-cols-1 gap-6 p-4 sm:p-6 lg:grid-cols-[1.2fr_1fr]">
           <div className="relative h-72 w-full overflow-hidden rounded-xl bg-neutral-100 sm:h-96">
             <Image
@@ -162,7 +165,9 @@ export default async function PromotionDetailsPage({
                   {formatCurrency(promotion.promoPrice)}
                 </p>
                 <span className="pb-0.5 text-base font-semibold text-success-500">
-                  {promotion.discountPercent}% off
+                  <span className="inline-flex items-center rounded-full bg-success-500 px-2.5 py-0.5 text-[11px] font-extrabold text-white">
+                    {promotion.discountPercent}% off
+                  </span>
                 </span>
                 {usableCoupon ? (
                   <span className="mb-1 inline-flex items-center rounded-full bg-success-50 px-2 py-0.5 text-[10px] font-semibold leading-none text-success-500">

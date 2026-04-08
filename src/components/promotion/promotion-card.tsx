@@ -135,7 +135,7 @@ export function PromotionCard({ promotion, priority = false, compact = false }: 
               <p data-testid={testIds.promotionCard.promoPrice} className="text-lg font-bold leading-tight text-neutral-900">
                 {formatCurrency(promotion.promoPrice)}
               </p>
-              <span data-testid={testIds.promotionCard.discount} className="text-sm font-semibold text-success-500">
+              <span data-testid={testIds.promotionCard.discount} className="inline-flex items-center rounded-full bg-success-500 px-2 py-0.5 text-[10px] font-extrabold text-white">
                 {promotion.discountPercent}% off
               </span>
               {usableCoupon ? (
